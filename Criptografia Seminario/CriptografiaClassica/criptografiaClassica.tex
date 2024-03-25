@@ -1,0 +1,95 @@
+\chapter{Criptografia Clássica}
+
+Designa-se usualmente por \emph{criptografia clássica} as cifras  pré-computacionais, desenvolvidas e utilizadas tendo por base processos mecânicos ou manuais. O mais simples deste tipo de criptografia consiste em trocar uma letra pela seguinte. Um código similar foi usado por Júlio César, cuja a chave era estabelecida pelo deslocamento, de três posições, nas letras do alfabeto~\cite{Coutinho2005}.
+
+\begin{definicao}[Cifra Deslocamento]
+ Seja $\mathcal{M}=\mathcal{C}=\mathbb{Z}_{26}^*$, $\mathcal{K}=\mathbb{Z}_{26}$. 7
+ Para $0 \leq K \leq \mid\mathbb{Z}_{26}\mid$=26, define-se:
+$$e_k(x)=(x+K) \; mod \; 26$$ e $$d_k(y)=(y - K) \; mod \; 26$$ para todo o $x,y \in \mathbb{Z}_{26}$
+\end{definicao}
+
+\emph{Nota:} para $\mathbb{Z}_{n}$ tem-se $n=26$ uma vez que o alfabeto adotado tem 26 caracteres.
+
+\begin{teorema}[Cifra Deslocamento Simples] As funções $e_k$ e $d_k$ constituem uma cifra.
+\end{teorema}
+\begin{demonstracao}
+    \begin{align*}
+    d_k(e_k(x)&=d_k(x+k)=\\
+              &=(x+k)-k=\\
+              &=x\;mod\;26
+\end{align*}
+
+Então, por definição,a cifra de deslocamento é uma cifra.
+\end{demonstracao}
+
+
+\begin{definicao}[Cifra Deslocamento Linear]
+    Seja $\mathcal{M}=\mathcal{C}=\mathbb{Z}_{26}^*$, e seja:
+$K=\{(a,b) \in \mathbb{Z}\times \mathbb{Z} : mdc(a,26)=1\}$.
+
+Para $K=(a,b) \in \mathcal{K}$, define-se:
+$$ e_k(x)=(ax + b)\;mod\;26$$
+e
+$$ d_k(y)=a^{-1}(y - b)\;mod\;26$$
+para todo o $x,y \in \mathbb{Z}_{26}$
+\end{definicao}
+
+\begin{teorema}[Cifra deslocamento linear] As funções $e_k$ e $d_k$ constituem uma cifra.
+\end{teorema}
+\begin{demonstracao}
+    \begin{eqnarray*}
+    d_k(e_k(x)) & = & d_k(ax +b)\\
+                & = & a^{-1}(ax+b -b)\quad\text{\;por definição $a$ é invertível em $\mathbb{Z}_{26}$}\\
+                & = & a^{-1}ax\\
+                & = & x
+    \end{eqnarray*} 
+Por definição, verifica-se que o resultado apresentado anteriormente é verdadeiro.
+\end{demonstracao}
+
+
+Relativamente à criptoanálise, as cifras clássicas são cifras muito fracas ou completamente inseguras pelo que estão suscetíveis a ataques por procura exaustiva. Também é possível quebrar esta cifra por ataques baseada na frequência relativa das letras, diagramas,trigramas, letras iniciais e finais das palavras.
+
+Por exemplo, se todas as todas as ocorrências da letra $a$ são substituídas pela letra $x$, uma mensagem cifrada contendo muitas instâncias da letra $x$, iria sugerir ao criptoanalista, que a letra $x$ representa a letra $a$.
+
+De facto, para uma dada linguagem verifica-se que cada letra aparece de acordo com uma frequência própria. No caso da língua portuguesa tem-se a seguinte tabela de frequência:~\cite{Quaresma2009a}:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{>{\columncolor{gray!20}}cccccccccc}
+a & 12,71\% & \cellcolor{gray!20}b & 0.81\% & \cellcolor{gray!20}c & 4,16\% & \cellcolor{gray!20}d  & 5,52\% & \cellcolor{gray!20}e & 11,99\% \\
+f & 1,43\% & \cellcolor{gray!20}g & 1,32\% & \cellcolor{gray!20}h & 0,74\% & \cellcolor{gray!20}i  & 7,18\% & \cellcolor{gray!20}j & 0,21\% \\
+k & 0,00\% & \cellcolor{gray!20}l & 3,23\% & \cellcolor{gray!20}m & 4,48\% & \cellcolor{gray!20}n  & 5,24\% & \cellcolor{gray!20}o & 11,32\% \\
+p & 3,07\% & \cellcolor{gray!20}q & 1,41\% & \cellcolor{gray!20}r & 6,47\% & \cellcolor{gray!20}s  & 7,99\% & \cellcolor{gray!20}t & 5,31\% \\
+u & 3,44\%  & \cellcolor{gray!20}v & 1,36\% & \cellcolor{gray!20}w & 0.02\% & \cellcolor{gray!20}x  & 0,28\% & \cellcolor{gray!20}y & 0,02\% \\
+z & 0,37\% & & & & & &  & & \\
+\end{tabular}
+\end{table}
+
+Com estes dados, agrupa-se estes valores em grupos, das letras com maior frequência para as menos frequentes:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{>{\columncolor{gray!20}}ccccc}
+Primeiro grupo  & \cellcolor{gray!20}Segundo grupo & \cellcolor{gray!20}Terceiro grupo & \cellcolor{gray!20}Quarto grupo  & \cellcolor{gray!20}Quinto grupo\\
+a,e,o &s,r,i & n,d,m,u,t,c &  l,p,v,g,h,q,b,f  & z,j,x,k,w,y\\
+\end{tabular}
+\end{table}
+
+Notar que este processo reduz o número de tentativas e erro a realizar antes de se conseguir quebrar o código tornando-o mais eficiente.
+
+Logo para quebrar a cifra utilizada para obter o texto encriptado ``a fkdyh whp gh vhu pdqwlgd', sabendo que foi utilizado um sistema de cifração de deslocamento simples, precisamos de calcular as frequências relativas para o texto cifrado,tem-se:
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{>{\columncolor{gray!20}}cccccccccc}
+d & 17,9\% & \cellcolor{gray!20}f & 7,1\% & \cellcolor{gray!20}g & 7,1\% & \cellcolor{gray!20}h & 21,4\% \\
+k & 3,6\% & \cellcolor{gray!20}l & 3,6\% & \cellcolor{gray!20}p & 7,1\% & \cellcolor{gray!20}q & 3,6\% \\
+u & 7,1\% & \cellcolor{gray!20}v & 7,1\% & \cellcolor{gray!20}w & 10,7\% & \cellcolor{gray!20}y & 3,6\% \\
+\end{tabular}
+\end{table}
+Por análise das frequências relativas e consultado o primeiro grupo, onde as letras tem maior frequência relativa, uma vez que ``d'', com $17,9\%$, e o ``h'', com $21,4\%$ então podemos fazer ``d'' corresponder a ``a'', por exemplo. Neste caso, a nossa chave é 3.
+
+Assim, obtemos o texto claro ``a chave tem de ser mantida secreta''. Logo a cifra foi quebrada.~\cite{Quaresma2009a}
+
+Com recurso do computador podemos facilmente realizar todo o processo anterior rapidamente pelo que este tipo de cifra é muito fraca.

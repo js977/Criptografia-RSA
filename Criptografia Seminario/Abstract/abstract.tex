@@ -1,0 +1,25 @@
+% ************************** Thesis Abstract *****************************
+% Use `abstract' as an option in the document class to print only the titlepage and the abstract.
+\begin{abstract}
+\ifisLangEn
+
+
+% ************************************************************************
+%
+% As linhas seguintes definem o `resumo' em portugu\^{e}s apenas no caso
+% da l\'{\i}ngua utilizada ser o ingl\^{e}s. Caso contr\'{a}rio, ser\~{a}o ignoradas.
+%
+% ************************************************************************
+
+  \cleardoublepage
+  \setsinglecolumn
+  \chapter*{\centering \Large Resumo}
+  \thispagestyle{empty}
+
+\else
+A criptografia RSA é um sistema de segurança digital que utiliza um par de chaves - uma pública e uma privada - para proteger informações durante a transmissão. Fundamentado na complexidade matemática da fatorização de números de grande dimensão. O RSA é muito utilizado para garantir a confidencialidade e autenticidade de dados em transações online, \emph{e-mails} seguros e na proteção de informações sensíveis. Sua utilidade reside na capacidade de enviar mensagens seguras para qualquer pessoa, usando uma chave pública disponível, enquanto apenas o destinatário autorizado, com acesso à chave privada correspondente, pode decifrar e ler a mensagem. Este método de criptografia eficaz continua a desempenhar um papel essencial na segurança da era digital.
+
+Neste estudo, inicialmente introduzimos os princípios matemáticos essenciais para a compreensão dos sistemas criptográficos. Em seguida, discutimos os sistemas criptográficos, destacando especialmente a criptografia RSA, abordando a cifra RSA assim como a sua criptoanálise (incluindo Métodos de Fermat, Divisões e Euclides). Concluímos com uma análise comparativa dos diversos métodos mencionados anteriormente.
+
+\fi
+\end{abstract}

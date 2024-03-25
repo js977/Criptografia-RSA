@@ -1,0 +1,376 @@
+ \chapter{Criptografia RSA}
+\label{sec:criptografiaRSA}
+
+Metódo de criptografia de chave pública criado em 1978 por R.C. \textbf{R}ivest, A. \textbf{S}hamir e L.\textbf{A}dlemar(RSA), que na época trabalhavam no massachusetts Institute of Tecnology(MIT). Presentemente, é o código de chave pública mais utilizado em aplicações comerciais~\cite{Coutinho2005}.
+
+Para implementar a criptografia RSA vamos precisar de:
+\begin{itemize}
+    \item escolher dois  números primos de grande dimensão,\footnote{Size considerations for public and private keys, \url{https://www.ibm.com/docs/en/zos/2.3.0?topic=certificates-size-considerations-public-private-keys}} $p$ e $q$;
+    \item conhecer $n=pq$ para codificar a mensagem;
+    \item saber $p$ e $q$ para decodificar a mensagem;
+\end{itemize}
+
+A segurança do metódo advêm da dificuldade que é fatorizar números primos, uma vez que para descobrir a chave de encriptação é preciso fatorizar n de forma a encontra $p$ e $q$.
+
+Seja $\mathcal{C}_p=(e,n)$ Chave Pública, onde $1 < e <\phi(n)$. Tem-se, pela função de Euler e \emph{teorema~\ref{teo:teoremaA}}, $mdc(e,\phi(n))=mdc(e,(p-1)(q-1))=1$
+
+Seja $\mathcal{C}_s=(d,n)$  Chave Privada, onde $d$ é o inverso multiplicativo de $e$(Proposição 2), módulo $\phi(n)$.
+
+O algoritmo de encriptação, $\mathcal{A}_{C_p} \;: \; M \; \to \mathcal{A}_{C_p}(M)$, é:
+$$C=M^e(mod \; n)$$
+O algoritmo de desencriptação, $\mathcal{A}_{C_s} \;: \; C \; \to \mathcal{A}_{C_s}(C)=M$, é:
+$$M=C^d(mod \; n)$$
+
+Para que o algoritmo RSA possa ser considerado uma cifra o procedimento tem de ser invertível, isto é,
+$$A_{C_s}(A_{C_P}(M))=A_{C_P}(A_{C_s}(M))=M^{ed}(mod \; n)= M$$
+
+\section{Teorema RSA}
+
+Para provar este resultado vamos precisar da congruência $\mod m$ e da consequência que daí se tira que se $a \equiv b ( mod \; n)$ então $a=b +kn $, para um dado $k \in \mathbb{Z}$.
+
+Para o desenvolvimento da demonstração são necessários alguns resultados auxiliares, nomeadamente, congruência $\mod m$, \emph{pequeno teorema de Fermat} e \emph{teorema chinês dos restos}.
+
+\begin{teorema}[Cifra RSA]
+Sendo $(e,n)$ e $(d,n)$ as chaves públicas e privada respetivamente do sistema de Criptografia RSA verifica-se então que:
+$$(m^e)^d(mod \; n)=m$$
+para qualquer inteiro $m$, com $0 \le m < n$.
+\end{teorema}
+
+\begin{demonstracao}
+Da definição de $e$ e $d$ tira-se que $ed \equiv 1 (mod \; \phi(n))$ existe então um $k \in \mathbb{Z}$ tal que $ed= 1+ k\phi(n)$, ou seja:
+$$ed=1+k(p-1)(q-1), \; K \in \mathbb{Z}$$
+donde
+$$(m^e)^d=m^{ed}=m^{1+k(p-1)(q-1)}=m(m^{(p-1)(q-1)})^k$$
+segue-se que
+$$(m^e)^d \equiv m(m^{(p-1)})^{(q-1)k} \equiv m(mod p)$$
+Se $p$ não é um divisor de $m$ esta congruência é uma consequência do \emph{pequeno teorema  de fermat}. Caso contrário a asserção é trivial dado que ambos os membros da equação são congruentes com $0 \; mod \; p$.
+
+De forma análoga ter-se-ia que:
+$$(m^e)^d \equiv m\;(mod \; q)$$
+
+Dado que $p$ e $q$ são números primos distintos pode-se aplicar o teorema chinês dos restos e dado que se assume que $0 \le m < n$, obtêm-se~\cite{Quaresma2009a}:
+$$(m^e)^d \equiv m\;(mod \; pq) \equiv(mod \; n)=m$$
+\end{demonstracao}
+
+\subsubsection{Porque o RSA é seguro?}
+\label{sec:porqueeRSAeseguro}
+
+Seja $p$ e $q$ os parâmetros que estamos a utilizar. Sendo o RSA um método de chaves públicas então a chave de codificação corresponde a chave pública do sistema, ou seja, o par $(n,e)$ é acessível a qualquer utilizador. Logo a segurança do RSA provém da dificuldade do cálculo de $d$ sabendo $n$ e $e$.
+
+Efetivamente, apenas sabemos calcular $d$ por aplicação do algoritmo de Euclides a $\phi(n)$ e $e$. Por outro lado, apenas consegue-se calcular $\phi(n)$ se formos capazes de fatorizar $n$ de forma a obter $p$ e $q$, isto é, apenas é possível quebrar o código se conseguirmos fatorizar $n$.
+
+Além disso, é impossível alguém criar uma forma de descobrir $d$ sem ter que fatorizar.
+De facto, a partir de $n=pq$ e $\phi(n)=(p-1)(q-1)$ conhecidos tem-se
+$$\phi(n)=(p-1)(q-1)=pq-(p+q)+1=n-(p+q)+1$$
+tal que $p+q=n-\phi(n)+1$ é conhecido. Mas
+$$(p+q)^2-4n0(p^2+q^2+2pq)-4pq=(p-q)^2$$
+Logo
+$$p-q=\sqrt{(p+q)^2-4n}$$
+Assim sabendo $p+q$ e $p-q$ calcula-se facilmente $p$ e $q$~\cite{Coutinho2005}.
+
+%\textbf{Criptoanálise}
+%\addcontentsline{toc}{section}{Criptoanálise}
+\section{Criptoanálise}
+\label{sec:criptoanalise}
+
+Ao longo dos anos, vários métodos de criptoanálise têm sido desenvolvidos para tentar encontrar vulnerabilidades no algoritmo RSA e em outros sistemas criptográficos. Estes incluem ataques de fatoração de inteiros, ataques de timing, entre outros, cada um com vista a encontrar falhas na segurança para comprometer a proteção dos dados~\cite{Quaresma2009a,Coutinho2005}.
+
+A contínua evolução da criptoanálise e a descoberta de nova formas de ataque salientam a importância de manter algoritmos como o RSA em constante revisão e atualização, de modo a garantir assim a segurança dos dados em um ambiente digital em constante mudança e cada vez mais propenso a ameaças cibernéticas.
+
+Em seguida são apresentados alguns dos métodos de criptoanálise,  que em casos específicos, conseguem quebrar a cifra RSA.
+
+\begin{comment}
+\textbf{Expoente de encriptação}
+
+De maneira a aumentar a eficiência da encriptação é importante selecionar um expoente d encriptação $e$ pequeno
+$$c=m^e(mod \; n)$$
+Mas $e$ não poder ser muito pequeno. Com efeito para $e=3$ suponhamos que estamos a enviar a mensagem $m$ para três diferentes entidades com módulos públicos de $n_1, \;n_2 \; e n_3$, vai se enviar $c_i=m^3 mod\;n_i$ para $1\le\le 3$.\\
+Consideremos que $n_1,n_2 e n_3$ são primos dois a dois, é possível usar os textos encriptados para descobrir a solução $x$, onde $0 \le x \le n_1n_2n_3$, das três congruências anteriores vamos obter 
+\begin{equation}
+\left\{ \begin{aligned} 
+  x &\equiv c_1 (mod \;n_1)\\
+  x &\equiv c_2 (mod \;n_2)\\
+  x &\equiv c_3 (mod\;n_3)\\
+\end{aligned} \right.
+\end{equation}
+Uma vez que $n^3 < n_1n_2n_3$, pelo Teorema Chinês dos Restos, tem-se que $x=m^3$. Logo fazendo a raiz cúbica de x consegue-se recuperar o texto original.[4]
+\end{comment}
+
+\subsection{Método de Fermat}
+\label{sec:metodoFermat}
+
+Proposto Pierre Fermat para encontrar dois inteiros a e b que permitam representar o número natural n como diferença de dois quadrados:
+$$n=a^2\;-\;b^2 \leftrightarrow n=(a\;-\;b)(a\;+\;b)$$
+
+\begin{teorema}
+qualquer inteiro $n$ ímpar maior que 1 pode ser escrito como a diferença de dois quadrados.
+\end{teorema} 
+
+\begin{demonstracao}
+Seja $n=pq$, com $q\le p$(no caso de $n$ ser primo considera-se $n=n \times 1$).
+Por hipótese $n$ é ímpar, então $p$ e $q$ também o são, logo:$\frac{p+q}{2}$ e $\frac{p-q}{2}$ são inteiros, ma então temos:
+\begin{align*}
+    \left(\frac{p+q}{2}\right)^2-\left(\frac{p-q}{2}\right)^2&=\frac{p^2+2pq+q^2}{4}-\frac{p^2-2pq+q^2}{4}\\
+    &=\frac{p^2+2pq+q^2-p^2+2pq-q^2}{4}\\
+    &=\frac{4pq}{4}\\
+    &=pq\\
+    &=n
+\end{align*}
+\end{demonstracao}
+
+Para determinar os inteiros $a$ e $b$ de forma que $n=a^2 - b^2$, o processo pode ser conduzido da seguinte maneira:
+\begin{itemize}
+    \item Dado um inteiro $n$ ímpar começamos por $a=\lfloor \sqrt{n} \rfloor +1$
+    \item Se $b=\sqrt{a^2-n}$ é um inteiro, obtém-se o pretendido
+    \item Caso contrário, incrementamos a de uma unidade até que b seja um inteiro;
+\end{itemize}
+
+Por exemplo, para $n=2027651281$temos 
+
+$a=\lfloor \sqrt{n} \rfloor +1=45030$
+
+Para b obteve-se a seguinte tabela de tentativas~\cite{Quaresma2009a}:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{>{\columncolor{gray!20}}cccc}
+a & b & \cellcolor{gray!20}a & b\\
+1º45030 & $\sqrt{45030^2-2027651281^2}=222,75$ & \cellcolor{gray!20}7º45036 & $\sqrt{45036^2-2027651281}=768,12$\\
+2º45031 & $\sqrt{45031^2-2027651281^2}=373,73$  & \cellcolor{gray!20}8º45037 & $\sqrt{45037^2-2027651281^2}=824,67$ \\
+3º45032 & $\sqrt{45032^2-2027651281}=479,31$ & \cellcolor{gray!20}9º45038 & $\sqrt{45038^2-2027651281}=877,58$\\
+4º45033 & $\sqrt{45033^2-2027651281}=565,51$ & \cellcolor{gray!20}10º45049 & $\sqrt{45039^2-2027651281}=927,49$\\
+5º45034 & $\sqrt{45034^2-2027651281}=640,21$ & \cellcolor{gray!20}45040 & $\sqrt{45040^2-2027651281}=974,84$\\
+6º45035 & $\sqrt{45035^2-2027651281}=707,06$ & \cellcolor{gray!20}12º45041 & $\sqrt{45041^2-2027651281}=1020$\\
+\end{tabular}
+\end{table}
+
+
+De 
+\begin{equation}
+\begin{cases}
+    \frac{p+q}{2}=46041\\
+    \frac{p-q}{2} = 1020
+\end{cases}
+\end{equation}
+
+obtém-se $p=47061$ e $q=45021$
+
+Assim $n=45041^2-1020^2$, $n=46061\times44021$.
+Relativamente ao algoritmo de fermat prova-se que,quanto maior for a diferença entre $p$ e $q$, maior é o número de tentativas que vão ser precisas obter um primeiro valor inteiro para a raiz~\cite{Quaresma2009a}.
+
+\subsection{Método das Divisões}
+
+Neste método, a abordagem consiste em empregar a técnica da fatoração por tentativa, que requer a divisão iterativa por todos os números primos até chegar ao valor de $\lfloor \sqrt{n} \rfloor$ ou até que a solução seja identificada~\cite{Quaresma2009a}.
+
+Para isso precisamos de gerar uma lista de números primos até ao limite pretendido. Presentemente, ainda não é conhecida nenhuma formula para gerar números primos. Assim, é necessário adotar um procedimento que apresente a enumeração exaustiva de todos os números primos até o limite especificado, tal como o algoritmo do Crivo de Eratóstenes.
+
+\subsection{Crivo de Aristóteles}
+
+O método do Crivo de Eratóstenes, criado pelo matemático grego Eratóstenes, representa um algoritmo prático e direto para determinar números primos até um certo limite. 
+
+Para exemplificar, vamos listar os números primos de 1 a 30.
+
+\begin{itemize}
+    \item Primeiramente, precisamos determinar $\lfloor \sqrt{30} \rfloor$, o número limite a ser verificado;
+    \item gerar uma lista de inteiros de 2 a 30;
+    \item obter o primeiro número da lista, neste caso é o 2;
+    \item eliminar todos os números da lista, excepto o 2;
+    \item O número sucessor na lista após o primo anterior também é primo. 
+\end{itemize}
+
+Obviamente, se repetirmos esse raciocínio até ao final da lista anteriormente gerada, os elementos que não forem eliminados pelas sucessivas aplicações do crivos são números primos de 1 a 30.
+
+Contudo a utilização deste algoritmo adiciona um elevado peso tanto em termos de tempo como de espaço uma vez que é preciso gerar o lista de inteiros de 2 a $n$ e estar a aplicar constantemente o crivo a lista~\cite{Quaresma2009a}.
+
+Alternativamente, existem outros métodos capazes de produzir uma sequência de números primos, assim como números que não são primos com ganhos temporal e espacial comparativamente ao crivo de Aristóteles. Mas são, obviamente, menos eficientes a sua utilização~\cite{Quaresma2009a}.
+
+\subsection{Método de Euclides}
+
+
+Este metódo ganha o seu nome da utilização do algoritmo de Euclides para o cálculo do máximo divisor comum de dois inteiros. Este algoritmo é muito eficiente e pode ajudar-nos a obter um dos fatores primos de n, de forma a obter o factor primo desejado. Basta multiplicar todos os números primos entre 2 e $\lfloor \sqrt{n} \rfloor$., calcular de seguida o m.d.c entre esse produto e $n$, de forma a obter o factor primo desejado.
+
+Este método recebe seu nome da utilização do algoritmo de Euclides para calcular o máximo divisor comum de dois números inteiros. Este algoritmo é muito eficaz e pode auxiliar na obtenção de um dos fatores primos de n. É suficiente multiplicar todos os números primos no intervalo de 2 a  $\lfloor \sqrt{n} \rfloor$, em seguida, calcular o máximo divisor comum entre esse produto e n para obter o fator primo pretendido.
+
+Com este procedimento, obviamente, ainda vamos continuar com o mesmo problema de elevado peso temporal e espacial em consequência  da exigência de criar um registo de todos os números primos até um limite específico.
+
+Por outro lado, vamos ter um problema de representação computacional decorrente dos número obtidos do produto de números primos uma vez que rapidamente o resultado excede a capacidade de representação da maioria das linguagens de programação disponíveis.
+Para evitar esse problema final,  subdividi-se a operação de multiplicação em múltiplas multiplicações menores.
+
+Para tal, os passos seguintes são adotados:
+
+\begin{itemize}[itemsep=0pt]
+    \item Começa-se por definir os conjuntos auxiliares:
+
+    $R={r_1,r_2,\dots,r_n}$, representando $r_i$ um limite inferior $(r_1=1,\;r_i<r_{i+1});$
+    
+    $S={s_1,s_2,\dots,s_n}$, representando $s_i$ um limite superior$(s_i<s{i+1},s_{m-1}<\lfloor \sqrt{n} \rfloor<s_m)$;
+    \item Para cada par $r_i$ e $s_i$, multiplicam-se todos os números primos entre estes dois limites, $P_i=\prod_{r_i\leq p_i \leq s_i}p_i$;
+    \item Para cada um dos $P_i$ calcula-se o $mdc(P-i,n)=a_i$;
+    \item Se $a_i \neq 1 $, então $a_i$ é o factor primo de $n$ que se pretende obter~\cite{Quaresma2009a}.
+\end{itemize}
+
+Para exemplificar, seja $n=1223$. Tem-se $\lfloor \sqrt{1223} \rfloor =34$, e realizemos a adição de forma iterativa, agrupando de 10 em 10.
+
+$$R=\{1,11,21,31\} \; \; S=\{10,20,30,40\}$$
+
+ $P_1=\prod_{1\leq 10 \leq s_1}p_1=2\times 3 \times 5 \times 7=210,\;mdc(210,1223)=1$
+ 
+$P_2=\prod_{11\leq p_2 \leq 20}p_2=11\times 13 \times 17 \times 19=46189,\;mdc(46189,1223)=1$
+
+$P_3=\prod_{21\leq p_3 \leq 30}p_i=23\times 29=667,\;mdc(667,1223)=1$
+
+$P_4=\prod_{31\leq p_3 \leq 30}p_i=31\times 37=1147,\;mdc(1147,1223)=31$
+
+Como foi dito anteriormente, embora este método seja muito eficiente, mesmo considerando o problema inicial anteriormente descrito, vai  prontamente resultar em problemas de representação devido à capacidade limitada dos tipos de dados disponíveis na maioria das linguagens de programação~\cite{Quaresma2009a}.
+
+\subsection{Estudo Comparativo dos Vários Métodos}
+\label{sec:EstudoComparativoVariosMetodos}
+
+Vimos que do ponto de vista teórico existem abordagens construtivas de decomposição em números primos que podem ser empregadas para alcançar o objetivo. Entretanto, é importante avaliar se existem ferramentas computacionais viáveis para realizar essa quebra de maneira eficiente e prática.
+
+Para analisar isso, uma vez que a análise da complexidade dos algoritmos apresentados está além do âmbito deste texto, simplesmente vamos exibir os resultados de um estudo comparativo dos diferentes métodos com base em um conjunto de testes de execução.
+
+Cada dado foi adquirido de testes executados em condições computacionais uniformes:sistema windowns 10 home,Intel(R) Core(TM) i3-7020U CPU 2.30GHz, RAM 4 GB.
+
+\begin{table}[h]
+\centering
+\caption{Estudo comparativo dos métodos}
+\label{tab:EstudoMetodo}
+\begin{tabular}{>{\columncolor{gray!20}}ccccc}
+n & \cellcolor{gray!20}Fatores & \cellcolor{gray!20}Divisão & \cellcolor{gray!20}Euclides & \cellcolor{gray!20}Fermat\\
+$1457$ & $p=31$, $q=47$ & $0,000$s & $0s$&$0s$\\
+13199 &$p=67$, $q=197$&$0,002s$ & $0.002s$& $0s$\\
+$281161$ & $p=79$, $q=3559$  & $0.136$s& $0.145s$&$0s$\\
+$701123$ & $p=3559$, $q=197$ &$0.521$s& $0.482s$&$0.003s$\\
+$23420707$&$p=41017$, $q=571$ & $71.124s$ & $64.86s$&$0s$\\
+$488754769$ & $p=110503$, $q=4423$  & $-$ & $-$&$0.005s$\\
+$2027651281$ & $p=46061$, $q=41017$ & $-$ & $-$&$0s$\\
+$103955963689$ & $p=47188363$, $q=2203$  & $-$& $-$&$1.75s$\\
+$210528952589$ & $p=95564663$, $q=2203$  & $-$ & $-$&$3.635s$\\
+$2746662891777043$ & $p=47188363$, $q=58206361$  & $-$ & $-$&$0.024s$\\
+$4509540007616669$ & $p=47188363$, $q=95564663$  & $-$ & $-$&$0.299s$\\
+\end{tabular}
+\end{table}
+
+
+Podemos afirmar que, com a escolha correta dos fatores primos, a cifra RSA permanece protegida. De facto:
+\begin{itemize}
+    \item[] Os métodos de Divisão e Euclides não apenas observam um aumento significativo no tempo de execução à medida que os fatores primos crescem de maneira substancial, mas também perdem a capacidade de resolver o problema a partir de valores relativamente pequenos de $n=p\times q$. Essas limitações surgem da necessidade de gerar números primos até $\lfloor \sqrt{n} \rfloor$ e, no caso do método de Euclides, da multiplicação de números de grande escala.
+    \item[]O método de Fermat observa um aumento muito acentuado em seus tempos de execução com o crescimento da dimensão dos fatores primos; no entanto, uma análise mais detalhada revela que quando os fatores primos estão em proximidade, o método de Fermat demonstra ser altamente eficaz.
+\end{itemize}
+
+Podemos inferir que, para garantir a segurança da criptografia RSA, os fatores primos devem estar consideravelmente distantes um do outro, e o valor de "n" deve ser maior que 20 dígitos\cite{Quaresma2009a}.
+
+Efetivamente, o tamanho de $n$ deve ser consideravelmente maior. Devido a algoritmos mais eficazes do que os previamente mencionados, a criptografia RSA foi violada utilizando valores de $n$ contendo 129, 155 e até mesmo 576 dígitos. Atualmente, a cifra RSA emprega valores de $n$ com 1024 dígitos ou mais\cite{Quaresma2009a}.
+
+\subsection{O Crivo quadratico - Algoritmo de Fatorização}
+
+Ao longo da história, os matemáticos têm se dedicado em descobrir abordagens mais eficientes e rápidas para decompor números compostos.
+No início, essa tarefa envolvia a tentativa de divisão por primos cada vez maiores até que a fatorização fosse obtida. Mas, esse método trivial só foi aperfeiçoado quando Fermat introduziu a ideia de fatorar a diferença de dois quadrados.
+Para aplicarmos o método de Fermat, primeiramente seja $n$ o número a ser fatorizado. Em seguida, procuramos o menor quadrado que seja maior que $n$ e verificamos se a diferença entre esse quadrado e $n$ é um quadrado perfeito. Se for, aplicamos o método de fatorização da diferença de dois quadrados para encontrar os fatores de $n$. Caso contrário, continuamos a procurar  o próximo quadrado e repetimos o procedimento.
+
+Apesar de o método de Fermat ser significativa melhor que o método da  divisão por  tentativa, o método de Fermat ainda é insuficiente quando se trata de fatorar números muito grandes, como os utilizados por exemplo na criptografia RSA, que podem ter centenas de dígitos. Nesse contexto, abordagens mais eficazes tornam-se imprescindíveis.
+
+Outros procedimentos foram desenvolvidas ao longo do tempo, como o Método da Curva Elíptica, descoberto por H. Lenstra em 1987, e métodos probabilísticos, como os métodos de $p-1$ e $\rho$(Rho de Pollard) proposto por John Pollard em 1974 e 1975, respetivamente. Contudo, os algoritmos mais rápidos ainda continuam a adotar o mesmo princípio básico apresentado por Fermat. Tais como Método da Fração Contínua, que permitiu fatorizar números até 50 dígitos sendo na época o limite era 20.  Em seguida, também  o Crivo Quadrático e o Crivo de Corpos de Números que por sua vez possibilitaram fatorizar números com mais de 150.  Esses três últimos provieram diretamente do método de Briallart e Morrison.
+
+Este texto destaca sobretudo o Crivo Quadrático, um método amplamente adotado e eficaz para fatorar números compostos. A sua importância na criptoanálise do RSA reside no facto de que ele possibilita a identificação e análise de possíveis fragilidades nos números primos empregados para formar as chaves criptográficas. Ao fatorar os números compostos envolvidos no algoritmo RSA, o Crivo Quadrático desempenha um papel fundamental na avaliação da segurança do sistema e na identificação de possíveis vulnerabilidades.
+
+\subsection{O Crivo quadrático - Método de Fatorização}
+
+O Crivo Quadrático, ou simplesmente chamado de QS, foi concebido por Carl Pomerance em 1981, expandindo as ideias anteriores dos matemáticos Kraitchik e Dixon. O QS foi o algoritmo de fatorização mais rápido conhecido até a descoberta do Crivo de Corpos de Números em 1993. Ainda assim, o QS é mais eficiente, simples e rápido para números inteiros com menos de 100 dígitos decimais. Trata-se de um método de fatorização de aplicação ampla, o que significa que a sua velocidade de processamento é determinada exclusivamente pelo tamanho do número inteiro a ser fatorado, sem considerar qualquer estrutura ou características específicas.
+
+\subsection{Como Funciona}
+
+Seja $n$ o número inteiro positivo que se pretende fatorizar. Tem-se como objetivo encontrar $x$ e $y$ inteiros tais que $x^2 \equiv y^2\pmod{n}$, aonde $xy$ é primo com $n$ e $x \not\equiv y \pmod{n}$.
+
+De facto, isso é equivalente a $(x-y)(x+y) \equiv 0 \pmod{n}$ pelo que  o $mdc(x-y,n)$ e $mdc(x+y,n)$ são fatores de n.
+
+Seja $$F(x)=(x+\lfloor \sqrt x \rfloor)^2 -n $$
+
+onde   $x_1,x_2,x_3,\ldots,x_k$ inteiros não negativos. Pretendemos encontrar subconjuntos $x_{i1},x_{i2},\dots,x_{1t}$ dos $x_i's$ tal que 
+$$F(x_{i1})F(x_{i2})\ldots F(x_{it})\equiv (x_{i1},x_{i2},\dots,x_{1t})^2\pmod n$$ é da forma $y^2$, ou seja,
+onde $F(x_{i1})F(x_{i2})\ldots F(x_{it})=y^2.$
+
+
+Por exemplo para $n=11649$, tem-se $\sqrt{1649}=40,607881…$ pelo que iniciamos da seguinte forma 
+
+\begin{center}
+\justify
+Para $x_1=41$, $41^2 - 1649 = 1681 - 1649=32$ (não é um quadrado perfeito). \\
+Para $x_1=42$, $42^2 - 1649 = 1764 - 1649 = 115$ (não é um quadrado perfeito). \\
+Para $x_1=43$,$43^2 - 1649= 1849 - 1649= 200$ (é um quadrado perfeito).
+\end{center}
+
+Tem-se 
+$32 \times 200=6400=80^2$ pelo que $$(41\times43)^2 \equiv 80^2 \pmod {1649}$$
+
+Notar que $41\times43=1763 \equiv114 \pmod {1649}$ e $114 \not\equiv \pmod 80\pmod {1649}$. Portanto, $mdc(114-80,1649)=17$ pelo que $1649=1797$.Além disso, o subconjunto é $\{x_1,x_3\}$.
+
+Pretendemos expandir essa mesma ideia para números muito maiores. Para isso, é necessário encontrar subconjuntos de $x_i's$ nas condições da definição anterior.
+
+Primeiramente, é importante notar que se algum $x^2 \equiv \pmod {n}$ tiver um fator primo grande, então outro ${x'}^2 \equiv \pmod {n}$  precisará ter esse mesmo fator primo grande para que possamos juntar este resíduo no nosso conjunto. Por exemplo, no caso anterior para  n=1649, encontramos o segundo resíduo como sendo 115, que tem o fator primo maior 23 relativamente aos restantes, pelo que descartou-se o resíduo 115 do  produto final. 
+
+Portanto precisamos de ter um limite B para o maior primo que pode ser aceite para fatorizar os resíduos que iremos obter.
+
+\subsection{Como calcular B?}
+
+\begin{definicao}[B-suave] Um inteiro positivo diz-se B-suave se nenhum dos seus fatores primos for maior   que B.
+\end{definicao}
+
+Seja \( m \) um inteiro positivo \( B \)-suave. Então existem \( p_1, p_2, \dots, p_{\pi(B)} \) tais que \( m = \prod p_i^{e_i} \), onde \( p_1, p_2, \dots, p_n \) são primos até \( B \) e cada \( e_i \geq 0 \). Consideremos $v(m)=(e_1,e_2,\dots,e_{\pi(B)})$ o vetor dos expoentes.
+
+Portanto pelo  exemplo acima, tem-se
+
+$32=2^5$
+
+$115=2^3\times5^2$
+
+$115=5\times23$
+
+Logo no seguimento do raciocínio aplicado no exemplo anterior pretende-se saber quais dos resíduos \(B\)-suave devemos juntar de forma que possamos obter quadrados perfeitos por congruência. Nesse sentido, uma vez que para cada v os seus elementos correspondem ao valor dos expoentes dos fatores primo de um certo resíduo então visa-se estudar a dependência linear no nosso conjunto dos vetores 
+ do espaço vetorial $\mathbb{F}_2^{\pi(B)}$. Isto é, pretende-se que o sistema $$Qv=0$$
+ seja possível, onde Q é a matriz formada pelos vetores $v \in \mathbb{F}_2^{\pi(B)} $
+
+Sabemos que, pelo resultado da álgebra, o nosso conjunto de vetores vai ser linearmente dependentes se tivermos pelo menos $\pi(B)+1$ números \(B\)-suave.
+
+Ao escolher um valor pequeno para \(B\), temos a vantagem de não precisar de muitos elementos \(B\)-suaves para encontrar um subconjunto que seja um quadrado. No entanto, se \(B\) for muito pequeno, a condição de ser \(B\)-suave torna-se tão excecional que podemos não encontrar nenhum número que a satisfaça. Assim, é crucial encontrar um equilíbrio entre esses dois aspetos: o valor de \(B\) deve ser suficientemente pequeno para não requerer uma grande quantidade de números 
+\(B\)-suaves para obtermos sucesso, mas também suficientemente grande para que esses números \(B\)-suaves ocorram com uma frequência adequada.
+
+Vamos estimar o valor de \(B\) pela seguinte definição:
+
+\begin{definicao}Seja $u^{-u}$ a probabilidade de $x^2 \pmod n$ ser \(B\)-suave, onde $u=\frac{1}{2}lnn/lnB$.
+\end{definicao}
+
+Antes de estimar \(B\) precisamos também considerar o tempo necessário para verificar a B-suavidade de $x^2-n$ para algum x. Ora, utilizando o crivo de Eratóstenes sabe-se que o tempo médio gasto em operações aritmética por x é $lnlnB$.
+
+Então, se a probabilidade de um valor de \( x \) resultar em um número \( B \)-suave é \( u^{-u} \), então podemos esperar que aproximadamente \( u^u \) valores de \( x \) sejam necessários para obter um \( x \) bem-sucedido. Logo, para obter \( k+1 \) \( x \) bem-sucedidos, são necessários \( (k+1)u^u \) valores de \( x \).
+
+
+Seja 
+
+$$T(B) = u^u(k+1)\ln(\ln(B)), \quad \text{onde} \quad u = \frac{\ln(n)}{2\ln(B)}$$
+
+Precisamos de introduzir o seguinte teorema.
+
+\begin{teorema} [Hadamard and de la Vallée Poussin] Para $x \sim \infty
+$,
+$$\pi(B)\approx \frac{x}{lnx}$$
+\end{teorema}
+
+Queremos encontrar \(B\) como função de \(B\) que minimize $T(B)$. Visto que \(K \approx \frac{1}{2\pi(B)}\) está na ordem de grandeza de \(\frac{B}{\ln B}\), temos que $lnT(B) \sim S(B)$, onde $S(B)=ulnu + lnB$.
+
+\begin{equation}
+\frac{dS}{dB} = \frac{-\ln{n}}{2B\ln^2{B}}(\ln{\ln{n}} - \ln{\ln{B}} - \ln{2} + 1) + \frac{1}{B}
+\label{eq:derivada}
+\end{equation}
+
+Quando definimos \eqref{eq:derivada} a zero, determinamos que \( \ln B \) está no intervalo entre \( c_1\sqrt{\ln n} \) e \( c_2\frac{1}{2}\sqrt{\ln\ln n} \) pelo que $lnlnnB \sim \frac{1}{2}lnln n$. 
+
+Além disso, também temos que
+
+$$lnB \sim \frac{1}{2}\sqrt{lnnlnlnn}$$
+$$u \sim \sqrt{lnn/lnlnn}$$
+$$S(B) \sim \sqrt{lnnlnlnn}$$
+
+
+

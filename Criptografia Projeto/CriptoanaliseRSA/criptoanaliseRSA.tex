@@ -1,0 +1,186 @@
+
+\chapter{Criptoanálise RSA}
+\label{sec:CriptoanaliseRSA}
+
+O sistema RSA é assimétrico, ou seja, possui uma chave pública $(e,n)$ e uma chave privada $(d,n)$, em que~\cite{Quaresma2009a}:
+
+\begin{itemize}
+    \item[]$n=p \times q$ com $p$ e $q$ números primos;
+    \item[]$1<e< \phi(n)$, em que $\phi(n)$, a funçao de Euler, é igual ao número co-primos de $n$;
+    \item[]$de\equiv 1(mod\phi(n))$
+\end{itemize}
+
+Sabemos que a chave pública é $(e,n)$, portanto apenas tem-se que fatorizar $n$ no produto de números primos $p$ e $q$ para obtermos $d$ e, com isso, a chave secreta $(d,n)$. No entanto, fatorizar um número em fatores primos é um problema computacionalmente difícil~\cite{Quaresma2009a}.
+
+Para a implementação dos algoritmos a seguir optou-se pelo tipos de dados ``\emph{unsigned long long int}'' uma vez que apenas iremos lhe dar com números positivos de grande dimensão.
+
+
+\section{Método da Divisão}
+\label{sec:MetodoDivisao}
+
+Sendo um método de força bruta, vai-se tentar a divisão sucessiva por todos os números primos até $\lfloor \sqrt{n} \rfloor$ , ou até que a solução seja encontrada.
+
+\begin{lstlisting}[frame=single,mathescape=true,caption={Criptoanálise RSA ---Especificação de \texttt{MétodoDivisao}},captionpos=b,label={lst:metodoEuclides},basicstyle=\footnotesize]
+unsigned long long int  metodoDivisao(unsigned long long int  );
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single,mathescape=true,caption={Método de Divisão},captionpos=b,label={lst:MetodoDivisao},basicstyle=\footnotesize]
+unsigned long long int  metodoDivisao(unsigned long long int  n){	
+unsigned long long int  *resCrivo = new unsigned long long int [n + 1],i;
+crivo(n,resCrivo);//Determinar os números primos
+for(i=2;i<=n;i++){
+    if(resCrivo[i]){//verificar quais dos numeros sao primos
+        if((n%i)==0){
+            return i;//retornar numero primo
+        }
+    }
+ }
+ return 0;
+}
+\end{lstlisting}
+
+Primeiramente, é necessário utilizar um método que elabore a lista de todos os números primos até um limite definido, e neste caso, foi utilizado o Crivo de Eratóstenes.
+
+\emph{Crivo de Eratóstenes}
+\begin{itemize}
+    \item[] começa-se por gerar um vetor com todos os números de 2 até $n$;
+    \item[]2 é primo;
+    \item[]Então utiliza-se o 2 para retirar todos os seus multiplos da lista, e assim sucessivamente;
+    \item[]os elementos que restar após as sucessivas aplicações constituem os números primos de 2 até $n$.
+\end{itemize}
+A necessidade de gerar a lista completa de todos os inteiros de 2 até $n$ e iterar sobre ela várias vezes, pois é necessário percorrer essa lista para aplicar os sucessivos crivos, leva a que a utilização do \emph{crivo de Erastóstenes} acrescente um peso muito significativo ao algoritmo, tanto temporal como especialmente~\cite{Quaresma2009a}.
+
+\section{Método de Euclides}
+\label{sec:MetodoEuclides}
+
+Este algoritmo consiste em multiplicar todos os números entre 2 e $\lfloor \sqrt{n} \rfloor$, calcular de seguida o \emph{mdc} entre esse produto e \emph{n}, de forma a encontrar o fator primo pretendido.
+
+Para evitar o problema de representação computacional dos números que se obtém do produto dos números primos de grande dimensão, vai dividir-se a multiplicação em vários produtos parcelares.
+
+Para tal, os passos seguintes são adotados:
+
+\begin{itemize}
+    \item Começa-se por definir os conjuntos auxiliares:
+
+    $R={r_1,r_2,\dots,r_n}$, representando $r_i$ um limite inferior $(r_1=1,\;r_i<r_{i+1});$
+    
+    $S={s_1,s_2,\dots,s_n}$, representando $s_i$ um limite superior$(s_i<s{i+1},s_{m-1}<\lfloor \sqrt{n} \rfloor<s_m)$;
+    \item Para cada par $r_i$ e $s_i$, multiplicam-se todos os números primos entre estes dois limites, $P_i=\prod_{r_i\leq p_i \leq s_i}p_i$;
+    \item Para cada um dos $P_i$ calcula-se o $mdc(P-i,n)=a_i$;
+    \item Se $a_i \neq 1 $, então $a_i$ é o factor primo de $n$ que se pretende obter~\cite{Quaresma2009a}.
+\end{itemize}
+
+\begin{lstlisting}[frame=single,mathescape=true,caption={Criptoanálise RSA ---Especificação de \texttt{MétodoEuclides}},captionpos=b,label={lst:metodoEuclides},basicstyle=\footnotesize]
+unsigned long long int  metodoEuclides(unsigned long long int  );
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single,mathescape=true,caption={Método de Euclides},captionpos=b,label={lst:MetodoEuclides},basicstyle=\footnotesize]
+unsigned long long int  metodoEuclides(unsigned long long int  n){
+unsigned long long int  *resCrivo = new unsigned long long int [n + 1],
+i,aux,lim,res=1;
+aux=floor(sqrt(n));
+lim=(aux/10)+1;
+unsigned long long int  *resM= new unsigned long long int [aux+1];
+for(i=0;i<=lim;i++){
+    resM[i]=1;
+    }
+crivo(n,resCrivo);//encontrar os numeros primos
+for(i=2;i<=aux;i++){
+    if(resCrivo[i]){
+        resM[(i/10)]=i*resM[i/10];//calcular o produto
+    }
+}
+i=0;
+while(i<lim){
+    if(mdc(resM[i],n)> 1){//verifcar mdc(resM[i],n]
+        return mdc(resM[i],n);
+    }		
+    i++;
+}
+delete[] resCrivo;
+delete[] resM;
+return res;
+}
+\end{lstlisting}
+
+Mais uma vez, tivemos de gerar números primos até $n$ que é pesado temporalmente. Além disso, apenas atenuamos o problema anterior quando fizemos a multiplicação parcelar para contornar o obstáculo de representação computacional relativamente ao resultado da  multiplicação dos números primos uma vez que à medida que $n$ aumentar voltaremos a ter o mesmo problema.
+
+\section{Método de Fermat}
+\label{sec:MetodoFermat}
+
+Este método consiste em obter dois inteiros $a$ e $b$ que permitam representar o número natural $n$ como a diferença de dois quadrados~\cite{Quaresma2009a}.
+
+Para determinar os inteiros $a$ e $b$ de forma que $n=a^2 - b^2$, o processo pode ser conduzido da seguinte maneira:
+\begin{itemize}
+    \item[] Dado um inteiro $n$ ímpar começamos por $a=\lfloor \sqrt{n} \rfloor +1$
+    \item[] Se $b=\sqrt{a^2-n}$ é um inteiro, obtém-se o pretendido
+    \item[] Caso contrário, incrementamos a de uma unidade até que b seja um inteiro;
+\end{itemize}
+
+
+\begin{lstlisting}[frame=single,mathescape=true,caption={Criptoanálise RSA ---Especificação de \texttt{MétodoFermat}},captionpos=b,label={lst:metodoFermat},basicstyle=\footnotesize]
+unsigned long long int* metodoFermat(unsigned long long int );
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single,mathescape=true,caption={Método de Fermat},captionpos=b,label={lst:MetodoFermat},basicstyle=\footnotesize]
+unsigned long long int* metodoFermat(unsigned long long int n){
+long double a,b;
+unsigned long long int *res= new unsigned long long int[2];
+a=floor(sqrt(n))+1;
+b=sqrt(a*a-n);
+//retorna o maior número inteiro menor ou n
+while(abs(b - floor(b)) > std::numeric_limits<long double>::epsilon()){
+a=a+1;//incrementar a
+b=sqrt(a*a-n);//incrementar b
+}
+//calcular p e q
+res[0]=a+b;
+res[1]=a-b;
+return res;
+}
+\end{lstlisting}
+Como veremos mais a frente, este método mostra que quanto maior a diferença entre \emph{p} e \emph{q} maior vai ser o número de tentativas precisas para obter um valor inteiro para a raiz.
+
+\section{Estudo Comparativo dos Métodos}
+Os dados foram obtidos a partir de testes realizados em um ambiente computacional, utilizando o sistema Windows 10 Home, processador Intel(R) Core(TM) i3-7020U CPU 2.30GHz e memória RAM de 4 GB. 
+Pode-se afirmar que, se a seleção dos números primos for apropriada, a segurança da cifra RSA é mantida.
+
+\begin{table}[h]
+\centering
+\caption{Estudo comparativo dos métodos}
+\label{tab:EstudoMetodo}
+\begin{tabular}{>{\columncolor{gray!20}}ccccc}
+n & \cellcolor{gray!20}Fatores & \cellcolor{gray!20}Divisão & \cellcolor{gray!20}Euclides & \cellcolor{gray!20}Fermat\\
+$1457$ & $p=31$, $q=47$ & $0,\!000s$ &$0,\!000s$&$0,\!000s$\\
+13199 &$p=67$, $q=197$&$0,\!002s$ & $0,\!002s$& $$0,\!000s$$\\
+$281161$ & $p=79$, $q=3559$  & $0,\!136s$& $0,\!145s$&$0,\!000s$\\
+$701123$ & $p=3559$, $q=197$ &$0,\!521$s& $0,\!482s$&$0,\!003s$\\
+$23420707$&$p=41017$, $q=571$ & $71,124s$ & $64,86s$&$0,\!000s$\\
+$488754769$ & $p=110503$, $q=4423$  & $-$ & $-$&$0,005s$\\
+$2027651281$ & $p=46061$, $q=41017$ & $-$ & $-$&$0,\!000s$\\
+$103955963689$ & $p=47188363$, $q=2203$  & $-$& $-$&$1,75s$\\
+$210528952589$ & $p=95564663$, $q=2203$  & $-$ & $-$&$3,635s$\\
+$2746662891777043$ & $p=47188363$, $q=58206361$  & $-$ & $-$&$0,024s$\\
+$4509540007616669$ & $p=47188363$, $q=95564663$  & $-$ & $-$&$0,299s$\\
+\end{tabular}
+\end{table}
+
+
+Com efeito, por observação da tabela \emph{Estudo comparativo dos métodos} constata-se que:
+
+\begin{itemize}
+    \item[] Os métodos de Divisão e Euclides apresentam um aumento considerável no tempo de execução à medida que os fatores primos crescem significativamente, além de perderem eficácia na resolução do problema mesmo para valores relativamente pequenos de $n=p\times q$. Essas limitações surgem da exigência de gerar números primos até $\lfloor \sqrt{n} \rfloor$ e, no caso do método de Euclides, da multiplicação de números de grande escala.
+    \item[]O método de Fermat observa um aumento muito acentuado em seus tempos de execução com o crescimento da dimensão dos fatores primos; no entanto, uma análise mais detalhada revela que quando os fatores primos estão em proximidade, o método de Fermat demonstra ser altamente eficaz.
+\end{itemize}
+
+Podemos inferir que, para garantir a segurança da criptografia RSA contra os métodos apresentados acima, os fatores primos devem estar consideravelmente distantes um do outro, e o valor de $n$ deve ser maior que 20 dígitos decimais~\cite{Quaresma2009a}.
+
+Presentemente, sobretudo devido a algoritmo mais eficazes, a cifra RSA utiliza valores de $n$ com 1024 bits (a que corresponde 309 dígitos decimais) ou mais~\cite{Quaresma2009a}.\footnotemark[1]
+
+
+%\textcolor{red}{PQ: \url{https://en.wikipedia.org/wiki/RSA_Factoring_Challenge} }
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../thesis"
+%%% End:

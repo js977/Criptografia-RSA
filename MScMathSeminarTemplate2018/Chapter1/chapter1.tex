@@ -1,0 +1,215 @@
+%*******************************************************************************
+%*********************************** First Chapter *****************************
+%*******************************************************************************
+
+\chapter{Introduction}   %Title of the First Chapter
+
+\ifpdf
+    \graphicspath{{Chapter1/Figs/Raster/}{Chapter1/Figs/PDF/}{Chapter1/Figs/}}
+\else
+    \graphicspath{{Chapter1/Figs/Vector/}{Chapter1/Figs/}}
+\fi
+
+
+%********************************** %First Section  **************************************
+\section{First section of the first chapter}
+
+And now I begin my first chapter here \dots
+
+And now to cite some people~\citet{Rea85,Ancey1996}
+
+How to index a name:
+
+A {\em \LaTeX{} class file}\index{\LaTeX{} class file@LaTeX class file} is a file, which holds style information for a particular \LaTeX{}.
+
+How to start a list of Nomenclature and Notation (OPTIONAL): ...
+
+
+\nomenclature[z-cif]{$CIF$}{Cauchy's Integral Formula}                                % first letter Z is for Acronyms
+\nomenclature[a-F]{$F$}{complex function}                                                   % first letter A is for Roman symbols
+\nomenclature[g-p]{$\pi$}{ $\simeq 3.14\ldots$}                                             % first letter G is for Greek Symbols
+\nomenclature[g-i]{$\iota$}{unit imaginary number $\sqrt{-1}$}                      % first letter G is for Greek Symbols
+\nomenclature[g-g]{$\gamma$}{a simply closed curve on a complex plane}  % first letter G is for Greek Symbols
+\nomenclature[x-i]{$\oint_\gamma$}{integration around a curve $\gamma$} % first letter X is for Other Symbols
+\nomenclature[r-j]{$j$}{superscript index}                                                       % first letter R is for superscripts
+\nomenclature[s-0]{$0$}{subscript index}                                                        % first letter S is for subscripts
+
+
+\subsection{First subsection in the first section}
+\dots and some more
+
+\subsection{Second subsection in the first section}
+\dots and some more \dots
+
+\subsubsection{First subsub section in the second subsection}
+\dots and some more in the first subsub section otherwise it all looks the same
+doesn't it? well we can add some text to it \dots
+
+\subsection{Third subsection in the first section}
+\dots and some more \dots
+
+\subsubsection{First subsub section in the third subsection}
+\dots and some more in the first subsub section otherwise it all looks the same
+doesn't it? well we can add some text to it and some more and some more and
+some more and some more and some more and some more and some more \dots
+
+\subsubsection{Second subsub section in the third subsection}
+\dots and some more in the first subsub section otherwise it all looks the same
+doesn't it? well we can add some text to it \dots
+
+%********************************** %Second Section  *************************************
+\section{Second section of the first chapter}
+and here I write more \dots
+
+\section{The layout of formal tables}
+This section has been modified from ``Publication quality tables in \LaTeX*''
+ by Simon Fear.
+
+The layout of a table has been established over centuries of experience and
+should only be altered in extraordinary circumstances.
+
+When formatting a table, remember two simple guidelines at all times (see Table \ref{table1}):
+
+\begin{enumerate}
+  \item Never, ever use vertical rules (lines).
+  \item Never use double rules.
+\end{enumerate}
+
+These guidelines may seem extreme but I have
+never found a good argument in favour of breaking them. For
+example, if you feel that the information in the left half of
+a table is so different from that on the right that it needs
+to be separated by a vertical line, then you should use two
+tables instead. Not everyone follows the second guideline:
+
+There are three further guidelines worth mentioning here as they
+are generally not known outside the circle of professional
+typesetters and subeditors:
+
+\begin{enumerate}\setcounter{enumi}{2}
+  \item Put the units in the column heading (not in the body of
+          the table).
+  \item Always precede a decimal point by a digit; thus 0.1
+      {\em not} just .1.
+  \item Do not use `ditto' signs or any other such convention to
+      repeat a previous value. In many circumstances a blank
+      will serve just as well. If it won't, then repeat the value.
+\end{enumerate}
+
+A frequently seen mistake is to use `\textbackslash begin\{center\}' \dots `\textbackslash end\{center\}' inside a figure or table environment. This center environment can cause additional vertical space. If you want to avoid that just use `\textbackslash centering'
+
+These guidelines may seem extreme but I have
+never found a good argument in favour of breaking them. For
+example, if you feel that the information in the left half of
+a table is so different from that on the right that it needs
+to be separated by a vertical line, then you should use two
+tables instead. Not everyone follows the second guideline:
+
+There are three further guidelines worth mentioning here as they
+are generally not known outside the circle of professional
+typesetters and subeditors:
+
+
+\begin{table}
+\caption{A badly formatted table}
+\centering
+\label{table:bad_table}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+& \multicolumn{2}{c}{Species I} & \multicolumn{2}{c|}{Species II} \\
+\hline
+Dental measurement  & mean & SD  & mean & SD  \\ \hline
+\hline
+I1MD & 6.23 & 0.91 & 5.2  & 0.7  \\
+\hline
+I1LL & 7.48 & 0.56 & 8.7  & 0.71 \\
+\hline
+I2MD & 3.99 & 0.63 & 4.22 & 0.54 \\
+\hline
+I2LL & 6.81 & 0.02 & 6.66 & 0.01 \\
+\hline
+CMD & 13.47 & 0.09 & 10.55 & 0.05 \\
+\hline
+CBL & 11.88 & 0.05 & 13.11 & 0.04\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\caption{A nice looking table}
+\centering
+\label{table:nice_table}
+\begin{tabular}{l c c c c}
+\hline
+\multirow{2}{*}{Dental measurement} & \multicolumn{2}{c}{Species I} & \multicolumn{2}{c}{Species II} \\
+\cline{2-5}
+  & mean & SD  & mean & SD  \\
+\hline
+I1MD & 6.23 & 0.91 & 5.2  & 0.7  \\
+
+I1LL & 7.48 & 0.56 & 8.7  & 0.71 \\
+
+I2MD & 3.99 & 0.63 & 4.22 & 0.54 \\
+
+I2LL & 6.81 & 0.02 & 6.66 & 0.01 \\
+
+CMD & 13.47 & 0.09 & 10.55 & 0.05 \\
+
+CBL & 11.88 & 0.05 & 13.11 & 0.04\\
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}
+\caption{Even better looking table using booktabs}
+\centering
+\label{table:good_table}
+\begin{tabular}{l c c c c}
+\toprule
+\multirow{2}{*}{Dental measurement} & \multicolumn{2}{c}{Species I} & \multicolumn{2}{c}{Species II} \\
+\cmidrule{2-5}
+  & mean & SD  & mean & SD  \\
+\midrule
+I1MD & 6.23 & 0.91 & 5.2  & 0.7  \\
+
+I1LL & 7.48 & 0.56 & 8.7  & 0.71 \\
+
+I2MD & 3.99 & 0.63 & 4.22 & 0.54 \\
+
+I2LL & 6.81 & 0.02 & 6.66 & 0.01 \\
+
+CMD & 13.47 & 0.09 & 10.55 & 0.05 \\
+
+CBL & 11.88 & 0.05 & 13.11 & 0.04\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+\caption{Characterizations of normal and extremally disconnected spaces}
+\label{table1}
+\begin{center}
+\begin{tabular}{p{91pt}p{150pt}p{155pt}}
+\toprule[1.2pt]   {\bf Space $\boldsymbol{X}$} &   {\sc Normal} &
+{\sc Extremally Disconnected}  \\
+\bottomrule[1.2pt]
+\addlinespace[5pt]
+\raggedright {\sf Urysohn's separation type lemma} & \raggedright Every two disjoint {\sc closed}\break subsets of $X$ are completely separated (Urysohn 1925). & \raggedright Every two disjoint {\sc open} subsets of $X$ are completely separated (Gillman \& Jerison 1960).\tabularnewline
+\addlinespace[5pt]\midrule\addlinespace[5pt]
+\raggedright {\sf Tietze's extension type theorem} & \raggedright Each {\sc closed} subset of $X$ is $C^*$-embedded (Tietze 1915). & \raggedright Each {\sc open} subset of $X$ is $C^*$-embedded (Gillman \& Jerison 1960). \tabularnewline
+\addlinespace[5pt]\midrule\addlinespace[5pt]
+\raggedright {\sf Kat\v{e}tov-Tong insertion type theorem} & For every {\sc upper} sem\-i\-con\-tin\-u\-ous real function $f$ and {\sc lower} sem\-i\-con\-tin\-u\-ous real function $g$ satisfying $f\le g$, there exists a continuous real function $h$ such that $f\le h\le g$ (Kat\v{e}tov 1951, Tong 1952). & For every {\sc lower} sem\-i\-con\-tin\-u\-ous real function $f$ and {\sc upper} sem\-i\-con\-tin\-u\-ous real function $g$ satisfying $f\le g$, there exists a continuous real function $h$ such that $f\le h\le g$ (Stone 1949, Lane 1975).\\
+\addlinespace[5pt]\midrule\addlinespace[5pt]
+\raggedright {\sf Hausdorff mapping invariance type theorem} & \raggedright The image of $X$ under any  {\sc closed} continuous map is {\sc normal} (Hausdorff 1935). & \raggedright
+The image of $X$ under any {\sc open} continuous map is {\sc extremally disconnected}. \tabularnewline
+\addlinespace[5pt]\bottomrule[1.2pt]
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Next section}
+
+\section{Next section}
+
+
