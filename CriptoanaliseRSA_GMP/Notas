@@ -1,0 +1,17 @@
+Formato do ficheiro
+
+n ; p ; q ; t1 ; p ; q ; t2 ; p ; q ; t3 ; p ; q
+
+sendo que n ; p ; q - são os valores globais (n = p*q)  - escritas no global
+
+Método das Divisões (escritas no próprio método)
+t - tempo 
+p ; q              --- para efeitos de validação
+
+Método de Euclides (valores dados pelo próprio método)
+t2 - tempo 
+p ; q             --- para efeitos de validação
+
+Método de Fermat (valores dados pelo próprio método)
+t3 - tempo 
+p ; q             --- para efeitos de validação
