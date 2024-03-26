@@ -1,0 +1,69 @@
+Este directório está no GitHub
+
+===Cópia Inicial===
+
+Getting a Git Repository
+
+You typically obtain a Git repository in one of two ways:
+
+    You can take a local directory that is currently not under version
+    control, and turn it into a Git repository, or
+
+    You can clone an existing Git repository from elsewhere.
+
+In either case, you end up with a Git repository on your local
+machine, ready for work.
+
+git clone git@github.com:opengeometryprover/GDDM.git
+
+===Trabalhar com o GitHub===
+
+Numa sessão de trabalho
+
+1) Obter o que está no GitHub (actualizar)
+
+git pull origin main
+
+2) Trabalhar na cópia local (tendo o cuidado de saber quais os ficheiro modificados
+
+3) enviar os modificados para o GitHub
+
+add / commit  / push
+
+===Enviar===
+
+*) Para adicionar/actualizar ficheiros ao arquivo
+
+git add gddmetodozinho.cpp
+
+*) Preparar o envio
+
+git commit -m "Submissão inicial, programa principal"
+
+*) Enviar para o arquivo GitHub
+
+git push origin main
+
+===Receber===
+
+git pull origin main
+
+===Verificar===
+
+*) Verificar o status
+
+git status
+
+===Apagar===
+
+git rm 
+
+===Renomear===
+
+git mv OLD-FILENAME NEW-FILENAME
+
+
+===Recuperar (ficheiro de uma dada versão)===
+
+
+git restore <file>..." to discard changes in working directory)
