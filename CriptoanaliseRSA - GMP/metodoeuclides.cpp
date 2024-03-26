@@ -7,14 +7,13 @@
 using namespace std;
 
 int main(){
-	unsigned long long int   n,p,q;
-	
-    n=488754769;
+  mpz_class n,p,q;
+ 
+  n=488754769;
     
-    p=metodoEuclides(n);
-    
-	q = n /p;
-    return 0;
-	
-		
+  p=metodoEuclides(n);
+  
+  q = n /p;
+  return 0;
+
 }

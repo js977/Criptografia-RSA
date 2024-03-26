@@ -1,11 +1,16 @@
+// Biblioteca Standard C++
 #include <iostream>
 #include <cmath>
-#include "criptoanalise.hpp"
 #include <limits>
+
+// Biblioteca GMP
 #include <gmp.h>
 #include <gmpxx.h> 
+
+// Biblioteca do Projecto
+#include "criptoanalise.hpp"
+
 using namespace std;
-using namespace std::chrono;
 
 int main() {
 

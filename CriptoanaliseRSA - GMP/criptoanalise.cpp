@@ -146,7 +146,7 @@ int main() {
     return 0;
 }
 */
-
+/*
 int main() {
     mpz_class n("4509540007616669");
     mpz_class res;
@@ -154,7 +154,7 @@ int main() {
     gmp_printf("res %Zd\n", res.get_mpz_t());
     return 0;
 }
-
+*/ 
 
 /*
 int main() {
