@@ -1,4 +1,11 @@
-Este directório está no GitHub
+O directório JoseSongo está sincronizado com o GitHub
+
+https://github.com/GeoTiles/JoseSongo
+
+O directório JS977  está sincronizado com o GitHub - e este é o definitivo
+
+https://github.com/js977/Criptografia-RSA
+
 
 ===Cópia Inicial===
 
@@ -14,27 +21,15 @@ You typically obtain a Git repository in one of two ways:
 In either case, you end up with a Git repository on your local
 machine, ready for work.
 
-git clone git@github.com:opengeometryprover/GDDM.git
-
-===Trabalhar com o GitHub===
-
-Numa sessão de trabalho
-
-1) Obter o que está no GitHub (actualizar)
-
-git pull origin main
-
-2) Trabalhar na cópia local (tendo o cuidado de saber quais os ficheiro modificados
-
-3) enviar os modificados para o GitHub
-
-add / commit  / push
+git clone git@github.com:js977/Criptografia-RSA.git
 
 ===Enviar===
 
 *) Para adicionar/actualizar ficheiros ao arquivo
 
 git add gddmetodozinho.cpp
+
+git restore <file>..." to discard changes in working directory)
 
 *) Preparar o envio
 
@@ -56,14 +51,50 @@ git status
 
 ===Apagar===
 
-git rm 
+git rm
 
-===Renomear===
+===Mover===
 
-git mv OLD-FILENAME NEW-FILENAME
+git mv
+
+===========================================
+Chaves de pública e privada de acesso
+===========================================
+
+Pode ser que seja necessário definir uma chave (tipo RSA) para fazer a
+transferência de ficheiros via git
+
+ ssh-keygen -o -a 256 -t ed25519 -C "$(hostname)-$(date +'%d-%m-%Y')"
+
+a qual tem depois de ser incluída no seu perfil (no GitHub)
 
 
-===Recuperar (ficheiro de uma dada versão)===
+===========================================
+Sessão de Trabalho
+===========================================
 
+Depois de fazer o clonar inicial, obtendo os ficheiros que estão no
+GitHub o trabalho seguinte passa por:
 
-git restore <file>..." to discard changes in working directory)
+===
+1) Iniciar o trabalho --- sincronizar com o GitHub
+
+git pull origin main
+
+===
+2) Trabalhar normalmente no computador local
+
+===
+3) Finalizar o trabalho --- sincronizar com o GitHub
+
+3.1) para todos os ficheiros que foram modificados
+
+git add <ficheiros>
+
+3.2) Definir uma mensagem (curta) para esta sessão de trabalho
+
+git commit -m "modificações no crivo quadrático"
+
+3.3) Enviar os ficheiros modificados
+
+git push origin main
