@@ -1,0 +1,23 @@
+Formato do ficheiro
+
+n ; p ; q ; t1 ; p ; q ; t2 ; p ; q ; t3 ; p ; q
+
+sendo que n ; p ; q - são os valores globais (n = p*q)  - escritas no global - abre ficheiro para "write" e fecha
+
+Método das Divisões (escritas no próprio método) - reabre o ficheiro para "append" e fecha
+t - tempo 
+p ; q              --- para efeitos de validação
+
+Método de Euclides (valores dados pelo próprio método) - reabre o ficheiro para "append" e fecha
+t2 - tempo 
+p ; q             --- para efeitos de validação
+
+Método de Fermat (valores dados pelo próprio método) - reabre o ficheiro para "append" e fecha
+t3 - tempo 
+p ; q             --- para efeitos de validação
+
+
+
+Function: void mpz_nextprime (mpz_t rop, const mpz_t op)
+
+    Set rop to the next prime greater than op. 
