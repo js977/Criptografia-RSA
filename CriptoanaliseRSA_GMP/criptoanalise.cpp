@@ -50,7 +50,7 @@ void crivo_mpz(const mpz_class &n, vector<mpz_class>& vetor) {
 
 
 void metodoDivisao(const mpz_class &n, mpz_class &res) {
-	cout<<"n divisao:"<<n<<endl;
+  //	cout<<"n divisao:"<<n<<endl;
     vector<mpz_class> vetor;
     mpz_class aux, s;
     size_t t = 0; // Alteração de int para size_t

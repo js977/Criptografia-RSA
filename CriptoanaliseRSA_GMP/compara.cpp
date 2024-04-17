@@ -19,9 +19,11 @@ using namespace std::chrono;
 int main(int argc, char *argv[]) {
     string temposFactorizacao;
 
+    
     if (argc < 2) {
         cout << "Número de argumentos insuficiente\n\n";
-        cout << "Utilização: ./compara <nome_ficheiro_para_escrita>\n\n";
+        cout << "Utilização: ./compara <nome_ficheiro_para_escrita> <p> <q>\n\n";
+        cout << "Por exemplo: ./compara resultados.csv 104729 52127\n\n";
         return 1; // código de erro - Número de argumentos insuficiente
     }
 
@@ -34,39 +36,50 @@ int main(int argc, char *argv[]) {
         return 2; // Código de erro, não é possível abrir o ficheiro para escrita
     }
 
+    
     mpz_class p, q, n;
-    mpz_set_str(n.get_mpz_t(), argv[2], 10);
+
+    
+    mpz_set_str(p.get_mpz_t(), argv[2], 10);
+    mpz_set_str(q.get_mpz_t(), argv[3], 10);
+
+    n=p*q;
     
     int i=0;
-	
-    while (i<10) {
+
+    ficheiro << " ; " << " Método da Divisão " << " ; " <<  " ; " << " Método da Euclides " << " ; " <<  " ; " " Método da Fermat " << " ; " <<  " ; " << endl;
+    
+    ficheiro << "n" << " ; " << "p" << " ; " << "q" << " ; " << "tempo (ms)" << " ; " << "p" << " ; " << "q" << " ; " << "tempo (ms)" << " ; " << "p" << " ; " << "q" << " ; " << "tempo (ms)" << endl;
+    
+    while (i<100) {
         ficheiro << n << " : "; // com ';' final e sem mudar de linha
 
+	
         // Medir o tempo para métodoDivisao
         auto start = high_resolution_clock::now();
         metodoDivisao(n, p);
         auto stop = high_resolution_clock::now();
-        auto duration = duration_cast<seconds>(stop - start);
+        auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
 
         q = n / p;
-        ficheiro << "(MD)" << p << " ; " << q << " ; Tempo: " << duration.count() << " segundos; ";
+        ficheiro << p << " ; " << q << " ; " <<  duration.count() << " ; " ;
 
         // Medir o tempo para métodoEuclides
         start = high_resolution_clock::now();
         p = metodoEuclides(n);
         stop = high_resolution_clock::now();
-        duration = duration_cast<seconds>(stop - start);
+        duration = duration_cast<std::chrono::milliseconds>(stop - start);
 
         q = n / p;
-        ficheiro << "(ME)" << p << " ; " << q << " ; Tempo: " << duration.count() << " segundos; ";
+        ficheiro << p << " ; " << q <<  " ; " << duration.count() << " ; " ;
 
         // Medir o tempo para métodoFermat
         start = high_resolution_clock::now();
         metodoFermat(n, p, q);
         stop = high_resolution_clock::now();
-        duration = duration_cast<seconds>(stop - start);
+        duration = duration_cast<std::chrono::milliseconds>(stop - start);
 
-        ficheiro << "(MF)" << p << " ; " << q << " ; Tempo: " << duration.count() << " segundos; ";
+        ficheiro << p << " ; " << q << " ; " << duration.count();
 
         ficheiro << endl;
         mpz_nextprime(p.get_mpz_t(), p.get_mpz_t());
