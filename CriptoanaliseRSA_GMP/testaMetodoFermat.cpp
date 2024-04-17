@@ -17,78 +17,53 @@ using namespace std;
 using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
-    string temposFactorizacao;
-
     
-    if (argc < 2) {
+    if (argc < 3) {
         cout << "Número de argumentos insuficiente\n\n";
-        cout << "Utilização: ./testaMetodoDivisao <lista_primos> <nome_ficheiro_para_escrita>\n\n";
-        cout << "Por exemplo: ./testaMetodoDivisao listaPrimos1.lstp resultados.csv\n\n";
+        cout << "Utilização: ./testaMetodoFermat <lista_primos> <nome_ficheiro_para_escrita>\n\n";
+        cout << "Por exemplo: ./testaMetodoFermat listaPrimos1.lstp resultadosMF1.csv\n\n";
         return 1; // código de erro - Número de argumentos insuficiente
     }
 
-    string temposFactorizacao = argv[1];
-
-    ofstream ficheiroCSV(temposFactorizacao.c_str(), ofstream::out);
+    ifstream ficheiroLP(argv[1], ofstream::in);
+    
+    if (!ficheiroLP) {
+        cout << "Impossivel abrir o ficheiro " << argv[1] << "\n\n";
+        return(2); // Código de erro, não é possível abrir o ficheiro para leitura
+    }
+    
+    ofstream ficheiroCSV(argv[2] , ofstream::out);
 
     if (!ficheiroCSV) {
-        cout << "Impossivel abrir o ficheiro " << argv[1] << "\n\n";
-        return 2; // Código de erro, não é possível abrir o ficheiro para escrita
+        cout << "Impossivel abrir o ficheiro " << argv[2] << "\n\n";
+        return(3); // Código de erro, não é possível abrir o ficheiro para escrita
     }
 
     
     mpz_class p, q, n;
-
-    
-    mpz_set_str(p.get_mpz_t(), argv[2], 10);
-    mpz_set_str(q.get_mpz_t(), argv[3], 10);
-
-    n=p*q;
-    
-
-    ficheiro << " ; " << " Método da Divisão " << " ; " <<  " ; " << " Método da Euclides " << " ; " <<  " ; " " Método da Fermat " << " ; " <<  " ; " << endl;
-    
-    ficheiro << "n" << " ; " << "p" << " ; " << "q" << " ; " << "tempo (ms)" << " ; " << "p" << " ; " << "q" << " ; " << "tempo (ms)" << " ; " << "p" << " ; " << "q" << " ; " << "tempo (ms)" << endl;
-    
     int i=0;
+    
+    ficheiroCSV <<  " ; " << " Método de Fermat " << " ; " <<  " ; " << endl;
+    ficheiroCSV << "n" << " ; " << "p" << " ; " << "q" << " ; " << "tempo (ms)" << endl;
+
     while (i<100) {
-        ficheiro << n << " : "; // com ';' final e sem mudar de linha
+      ficheiroLP >> p >> q;
 
-	
-        // Medir o tempo para métodoDivisao
-        auto start = high_resolution_clock::now();
-        metodoDivisao(n, p);
-        auto stop = high_resolution_clock::now();
-        auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
+      n=p*q;
 
-        q = n / p;
-        ficheiro << p << " ; " << q << " ; " <<  duration.count() << " ; " ;
+      // Medir o tempo para métodoDivisao
+      auto start = high_resolution_clock::now();
+      metodoFermat(n, p, q);
+      auto stop = high_resolution_clock::now();
+      auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
+      
+      q = n / p;
 
-        // Medir o tempo para métodoEuclides
-        start = high_resolution_clock::now();
-        p = metodoEuclides(n);
-        stop = high_resolution_clock::now();
-        duration = duration_cast<std::chrono::milliseconds>(stop - start);
-
-        q = n / p;
-        ficheiro << p << " ; " << q <<  " ; " << duration.count() << " ; " ;
-
-        // Medir o tempo para métodoFermat
-        start = high_resolution_clock::now();
-        metodoFermat(n, p, q);
-        stop = high_resolution_clock::now();
-        duration = duration_cast<std::chrono::milliseconds>(stop - start);
-
-        ficheiro << p << " ; " << q << " ; " << duration.count();
-
-        ficheiro << endl;
-        mpz_nextprime(p.get_mpz_t(), p.get_mpz_t());
-        mpz_nextprime(q.get_mpz_t(), q.get_mpz_t());
-        n = p * q;
+      ficheiroCSV << n << " ; " << p << " ; " << q << " ; " <<  duration.count() << endl; 
         i=i+1;
     }
 
-    ficheiro.close();
+    ficheiroCSV.close();
 
     return 0;
 }

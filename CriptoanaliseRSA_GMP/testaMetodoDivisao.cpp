@@ -18,7 +18,7 @@ using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
     
-    if (argc < 2) {
+    if (argc < 3) {
         cout << "Número de argumentos insuficiente\n\n";
         cout << "Utilização: ./testaMetodoDivisao <lista_primos> <nome_ficheiro_para_escrita>\n\n";
         cout << "Por exemplo: ./testaMetodoDivisao listaPrimos1.lstp resultados.csv\n\n";
@@ -40,31 +40,24 @@ int main(int argc, char *argv[]) {
     }
 
     mpz_class p, q, n;
-
-    
-    ficheiroCSV <<  " ; " << " Método da Divisão " << " ; " <<  " ; " << endl;
-    
-    ficheiroCSV << "n" << " ; " << "p" << " ; " << "q" << " ; " << "tempo (ms)" << endl;
-
     int i=0;
     
-    while (i<10) {
+    ficheiroCSV <<  " ; " << " Método da Divisão " << " ; " <<  " ; " << endl;
+    ficheiroCSV << "n" << " ; " << "p" << " ; " << "q" << " ; " << "tempo (ms)" << endl;
+    
+    while (i<100) {
       ficheiroLP >> p >> q;
 
       n=p*q;
 
-      //      cout << n << " " << p << " " << q << endl;
-      
       // Medir o tempo para métodoDivisao
       auto start = high_resolution_clock::now();
       metodoDivisao(n, p);
       auto stop = high_resolution_clock::now();
-      auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
+      auto duration = duration_cast<std::chrono::seconds>(stop - start);
       
       q = n / p;
-      ficheiroCSV << p << " ; " << q << " ; " <<  duration.count() << " ; " ;
-
-      ficheiroCSV << endl;
+      ficheiroCSV << n << " ; " << p << " ; " << q << " ; " <<  duration.count() << endl;
       i=i+1;
     }
 
