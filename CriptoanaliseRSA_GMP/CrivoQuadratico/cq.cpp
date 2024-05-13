@@ -15,6 +15,7 @@
 
 using namespace std;
 
+long int nTentativa =0; // variável global... só para efeitos de debugging
 
 // Função para verificar se 'a' é um resíduo quadrático módulo 'p' usando o critério de Euler
 bool criterioEuler(const mpz_class &a, const mpz_class &p) {
@@ -639,7 +640,7 @@ mpz_class solucaoPrimo(vector<vector<mpz_class>>& exp,vector<mpz_class> &baseF,c
 				
 		}
 		else{
-			cout<<"Solução errada!!"<<endl;
+		  cout << "Solução errada!!! - tentativa-status: " << nTentativa << "-" <<status << endl;
 		}
 		if(r!=1&&r!=n)
 			return r;
@@ -713,6 +714,8 @@ void crivoQuadratico(const mpz_class &n,mpz_class &p, mpz_class &q){
     // Calcular a solução obtida
     p = solucaoPrimo(expX, baseF, n, expVetorX, idX);
 
+    nTentativa++; // XXX só desgralhar XXX
+    
     // Verificar se a solução obtida é não trivial
     
     if (p == 1 || p== n) {
