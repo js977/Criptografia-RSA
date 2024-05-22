@@ -1,11 +1,12 @@
 CC = g++
 FLAGS = -lm
-GMP =  -lgmpxx -lgmp
+GMP =  -lgmpxx -lgmp -lmpfr
 
 .PHONY: clean all
 
 all: metodoDivisao metodoEuclides metodoFermat compara geraPrimos\
-	testaMetodoDivisao testaMetodoEuclides testaMetodoFermat
+	testaMetodoDivisao testaMetodoEuclides testaMetodoFermat \
+	testaMetodoCrivoQuadratico testaMetodoCrivoQuadraticoV1
 
 clean:
 	-rm *.o metodoDivisao metodoEuclides metodoFermat 
@@ -36,3 +37,15 @@ testaMetodoEuclides: testaMetodoEuclides.cpp criptoanalise.o
 
 testaMetodoFermat: testaMetodoFermat.cpp criptoanalise.o
 	${CC} -o $@ $@.cpp criptoanalise.o ${GMP}
+
+testaMetodoCrivoQuadratico: testaMetodoCrivoQuadratico.cpp cq
+	${CC} -o $@ $@.cpp cq.o ${GMP}
+
+cq: cq.cpp
+	${CC}  -c $@.cpp ${GMP}
+
+testaMetodoCrivoQuadraticoV1: testaMetodoCrivoQuadraticoV1.cpp crivoQuadratico
+	${CC} -o $@ $@.cpp crivoQuadratico.o ${GMP}
+
+crivoQuadratico: crivoQuadratico.cpp
+	${CC}  -c $@.cpp ${GMP}
