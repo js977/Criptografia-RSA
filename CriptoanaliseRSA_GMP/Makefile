@@ -4,12 +4,13 @@ GMP =  -lgmpxx -lgmp -lmpfr
 
 .PHONY: clean all
 
-all: metodoDivisao metodoEuclides metodoFermat compara geraPrimos\
+all: metodoDivisao metodoEuclides metodoFermat  geraPrimos\
 	testaMetodoDivisao testaMetodoEuclides testaMetodoFermat \
 	testaMetodoCrivoQuadratico testaMetodoCrivoQuadraticoV1
 
 clean:
-	-rm *.o metodoDivisao metodoEuclides metodoFermat 
+	-rm *.o metodoDivisao metodoEuclides metodoFermat \
+	testaMetodoCrivoQuadratico testaMetodoCrivoQuadraticoV1
 
 metodoDivisao: metodoDivisao.cpp criptoanalise.o
 	${CC} -o $@ $@.cpp criptoanalise.o ${GMP}
@@ -22,9 +23,6 @@ metodoFermat: metodoFermat.cpp criptoanalise.o
 
 criptoanalise: criptoanalise.cpp
 	${CC}  -c $@.cpp ${GMP}
-
-compara: compara.cpp criptoanalise.o
-	${CC} -o $@ $@.cpp criptoanalise.o ${GMP}
 
 geraPrimos: geraPrimos.cpp 
 	${CC} -o $@ $@.cpp ${GMP}
