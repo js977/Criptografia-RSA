@@ -13,9 +13,9 @@
 // Biblioteca do Projecto
 #include "cq.hpp"
 
-using namespace std;
 
-long int nTentativa =0; // variável global... só para efeitos de debugging
+
+using namespace std;
 
 // Função para verificar se 'a' é um resíduo quadrático módulo 'p' usando o critério de Euler
 bool criterioEuler(const mpz_class &a, const mpz_class &p) {
@@ -266,6 +266,7 @@ void sieving(const mpz_class &B, const mpz_class &n, const vector<mpz_class> &ba
         }
         // Verifica se 'resAux' é igual a 'res'
         if (resAux == res){
+			//cout<<"t:"<<t<<endl;
 			for(l=0;l<baseF.size();l++){
 				expVetor[t][l]=auxExpVetor[l];
 			}
@@ -640,7 +641,7 @@ mpz_class solucaoPrimo(vector<vector<mpz_class>>& exp,vector<mpz_class> &baseF,c
 				
 		}
 		else{
-		  cout << "Solução errada!!! - tentativa-status: " << nTentativa << "-" <<status << endl;
+			cout<<"Solução errada!!"<<endl;
 		}
 		if(r!=1&&r!=n)
 			return r;
@@ -714,8 +715,6 @@ void crivoQuadratico(const mpz_class &n,mpz_class &p, mpz_class &q){
     // Calcular a solução obtida
     p = solucaoPrimo(expX, baseF, n, expVetorX, idX);
 
-    nTentativa++; // XXX só desgralhar XXX
-    
     // Verificar se a solução obtida é não trivial
     
     if (p == 1 || p== n) {
@@ -738,9 +737,6 @@ void crivoQuadratico(const mpz_class &n,mpz_class &p, mpz_class &q){
 	
 	
 	};
-
-// ================================
-
 
 /*
 void decN(mpz_t n,mpz_t d, mpz_t s){
