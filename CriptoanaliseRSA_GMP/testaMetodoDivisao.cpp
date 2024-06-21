@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
       auto start = high_resolution_clock::now();
       metodoDivisao(n, p);
       auto stop = high_resolution_clock::now();
-      auto duration = duration_cast<std::chrono::seconds>(stop - start);
+      auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
       
       q = n / p;
       ficheiroCSV << n << " ; " << p << " ; " << q << " ; " <<  duration.count() << endl;
